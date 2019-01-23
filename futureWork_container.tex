@@ -1,0 +1,8 @@
+\section{Containerization}
+The idea of containerization is to put every component into a \gls{Docker} container. The main benefit would be that every component runs separated in a isolated environment.
+
+\begin{itemize}
+        \item More modular: With a Docker container setup every component (DNS, SSH, Mail, Web) would run in a separate container, which would make the setup more modular. 
+			\subitem Note: The firewall is not useful in a container. It needs to be configured on the Docker host to redirect the necessary ports to the right container.
+        \item Platform independent: With the use of Docker containers the project could be set up on any platform which supports a Docker Engine. This includes most of the modern Unix/Linux distributions and even Windows Systems. Inside of the containers there would still run a Ubuntu image.
+\end{itemize}

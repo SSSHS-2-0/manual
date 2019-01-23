@@ -1,0 +1,17 @@
+
+$ORIGIN 212.137.248.104.in-addr.arpa.
+$TTL 1800
+
+@ IN SOA ns1.examplerun.cf. ns2.examplerun.cf. (
+           2019010917   ; serial number
+           28800       ; Refresh
+           7200        ; Retry
+           1209600     ; Expire
+           86400       ; Min TTL
+           )
+
+           NS      ns1.examplerun.cf.
+           NS      ns2.examplerun.cf.
+; PTR
+                       IN      PTR     examplerun.cf.
+                       IN      PTR     mail.examplerun.cf.

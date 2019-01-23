@@ -1,0 +1,23 @@
+
+# Authentication for passwd-file users. Included from 10-auth.conf.
+#
+# passwd-like file with specified location.
+# <doc/wiki/AuthDatabase.PasswdFile.txt>
+
+passdb {
+  driver = passwd-file
+  # the PLAIN scheme prevents us from having to hash the empty string
+  args = scheme=PLAIN username_format=%u /etc/dovecot/users-external
+
+  # this option requires Dovecot 2.2.28 (or the patch), without it this setup
+  # is insecure because it permits logins with the empty string as password
+  mechanisms = external
+
+  # explicitly permit empty passwords
+  override_fields = nopassword
+}
+
+userdb {
+  driver = passwd-file
+  args = username_format=%u /etc/dovecot/users-external
+}

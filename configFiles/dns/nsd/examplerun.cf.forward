@@ -1,0 +1,36 @@
+
+$ORIGIN examplerun.cf.    ; default zone domain
+$TTL    86400               ; default time to live
+
+
+@ IN SOA ns1.examplerun.cf. ns2.examplerun.cf. (
+           2019010917   ; serial number
+           28800       ; Refresh
+           7200        ; Retry
+           1209600     ; Expire
+           86400       ; Min TTL
+           )
+
+           NS      ns1.examplerun.cf.
+           NS      ns2.examplerun.cf.
+           MX      10 mail.examplerun.cf.
+
+examplerun.cf.	IN CAA 0 issue "letsencrypt.org"
+examplerun.cf. IN CAA 0 iodef "mailto:postmaster@examplerun.cf"
+
+  IN A  104.248.137.212
+  IN TXT  "v=spf1 mx a ~all" 
+ns1   IN A  104.248.137.212
+ns2   IN A  104.248.137.212
+www   IN A  104.248.137.212
+*     IN A  104.248.137.212
+
+mail IN A 104.248.137.212
+     IN TXT  "v=spf1 mx a ~all"
+2019010917._domainkey       IN      TXT     (
+"v=DKIM1\059 h=sha256\059 k=rsa\059 s=email\059 p="
+"MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA6N+Xk5S5yT9WNMgbIS7CvNKdWFKpSR7Tfo6trV0Ml6O6BHsFiSp5U5"
+"kbQ/vrK/xgx9c4k5BIOk/yL/jd/O/BqjTGDnC/pL89SL1Ne5Z+vW1h4FEw9gmwk3etscUP0CYZZs5PgvDlBPgfWyitrjy+pYlxsFBORXZPlrpQRFnNYpSR/eAXWF3REliO7NquSSec985dpbZWQ/3MHm"
+"W8ZVwv5oDfh/kMQ9727qMxpOED0ZQyml2kPpdHK87Rg9zGOJDJs880RC3lsd+6tukf7fYyj51TvpRtndLPrbutKdFgi3eMMDkQXam+d8f3YHQoiMF7lR0pD2oOcH5glELX7gc6MwIDAQAB" )
+_adsp._domainkey       IN TXT "dkim=all"
+_dmarc IN TXT "v=DMARC1\059 p=quarantine\059 sp=quarantine\059 adkim=r\059 aspf=r\059 fo=1\059 rf=afrf\059 rua=mailto:postmaster@examplerun.cf"

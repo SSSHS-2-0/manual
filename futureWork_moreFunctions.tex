@@ -1,0 +1,8 @@
+\section{Extended functionalities}
+For somebody with basic needs the functionalities of this script is enough. But if we expand the spectrum, there are still some exciting features missing. Why not have more than one domains on the same server? Why not have multiple e-mail addresses? Why not choose your own address? This could be important for somebody who has a small company for example.
+\subsection{Multiple domains}
+The base to have multiple domains is already set. With NSD you have a perfect authoritative name server for multiple domains. NSD is not a hobby product, it is a very professional one. It is even used for some root domains (see: \textit{https://en.wikipedia.org/wiki/NSD}). The function to make one domain zone is already here, so we ``only'' need to make more of it and guide the user through a new process. 
+\subsection{Multiple e-mail addresses} \label{future_work_mail}
+Of course it would be interesting to have more than one email address per user. As well, if you want to create an email address it would be nice if you can choose your own local-part (everything before the @) of your address. Postfix is capable of all this things, but it won't do it by it self. This part sounds quite easy, but it is a complex process which is not defined and scripted yet.
+\subsection{Web application server} \label{future_work_web}
+Instead of using Apache only as a plain web server it could be extended to act a PHP or CGI application server with a database. This could be helpful if the user would like to run small applications next to static website content.

@@ -1,0 +1,25 @@
+\section{SSH}
+\subsection{SSH daemon}
+You recieve a server with a default SSH daemon setup from your provider or have one at home with a default configuration from your Unix/Linux distro.
+\subsubsection{BEFORE script}
+Here we are testing a server with a default setup from https://digitalocean.com (the results might differ, depending where your server is hosted).
+
+Before the SSH daemon is hardened we recieve the following result, some of the \enquote{Key Exchange Algorithms} and \enquote{MAC Algorithms} are weak.
+
+\begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\linewidth]{pics/score_SSH_before}
+        \caption{SSH daemon \textbf{BEFORE} }
+        \label{fig:scoresshbefore}
+\end{figure}
+\newpage
+
+\subsubsection{AFTER script}
+After the script is run and the SSH daemon is hardened only secure algorithms are used.
+\begin{figure}[H]
+        \centering
+        \includegraphics[width=1.0\linewidth]{pics/score_SSH}
+        \label{fig:scoressh}
+                \caption{SSH daemon \textbf{AFTER}}
+\end{figure}
+\newpage

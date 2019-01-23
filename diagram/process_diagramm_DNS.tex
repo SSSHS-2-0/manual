@@ -1,0 +1,121 @@
+\documentclass[tikz,border=4mm]{standalone}
+%\special{papersize=210mm,297mm}
+\usetikzlibrary{shapes,arrows,calc}
+\begin{document}
+\pagestyle{empty}
+
+
+% Define block styles
+\tikzstyle{decision} = [diamond, draw, fill=blue!20, 
+    text width=4.5em, text badly centered, node distance=3cm, inner sep=0pt,font=\fontsize{7}{7}\selectfont]
+\tikzstyle{block} = [rectangle, draw, fill=blue!20, 
+    text width=5em, text centered, rounded corners, minimum height=4em,font=\fontsize{7}{7}\selectfont]
+\tikzstyle{line} = [draw, -latex',font=\fontsize{7}{7}\selectfont]
+\tikzstyle{cloud} = [draw, ellipse,fill=red!20, node distance=3cm,
+    minimum height=2em,font=\fontsize{7}{7}\selectfont]
+    
+\begin{tikzpicture}[node distance = 3cm, auto]
+    % Place nodes
+    \node [cloud] (start) {start};
+    \node [block, below of=start] (defaultUnbound) {Install default unbound configuration};
+    \node [block, below of=defaultUnbound] (infoDomain) {Info for user};
+	\node [decision, below of=infoDomain] (askDomain) {Has domain};
+	\node [block, left of=askDomain] (infoMessageD) {Message for user}; 
+	\node [decision, below of=askDomain] (askDomainName) {Ask domainname};
+	\node [cloud, left of=askDomainName] (end) {end};
+	\node [decision, below of=askDomainName] (askDomainNameCorrect) {Domainname correct};
+	%IP
+	\node  [block, right of=start, node distance=6cm] (getIp) {Gets first IP};
+	\node  [block, below of=getIp] (moreIp) {Check if IP $>$ 1 availble};
+	\node  [decision, left of=moreIp] (askIP) {Asks if IPAdress is correct};
+    \node  [block, below of=askIP] (optionIp) {Make optionlist with all IPs};
+	\node  [decision, below of=optionIp] (chooseIP) {Choose IP};
+	\node  [block, below of=moreIp] (ipRev) {Reverse IPv4};
+    \node  [block, below of=ipRev] (installNSD) {Install NSD};
+    \node  [block, below of=installNSD] (infoDomain2) {Info for user};
+    \node  [block, below of=infoDomain2] (moreIPUnbound) {Check if IP $>$ 0 availble};
+    \node  [cloud, right of=moreIPUnbound] (end2) {end};
+
+    \node  [decision, below of=moreIPUnbound] (usageUnbound) {Usage Unbound Local Area};
+	%IP 2
+	\node  [block, right of=ipRev] (moreIp2) {Check if IP $>$ 1 availble};
+	\node  [block, above of=moreIp2] (optionIp2) {Make optionlist with all IPs};
+	\node  [decision, above of=optionIp2] (chooseIP2) {Choose IP};
+    \node  [block, below of=moreIp2] (reconfUnbound) {Reconfiger Unbound Local Area};
+    
+    % Draw edges
+    \path [line] (start) -- (defaultUnbound);
+    \path [line] (defaultUnbound) -- (infoDomain);
+    \path [line] (infoDomain) -- (askDomain);
+    \path [line] (askDomain) -- node[anchor=north] {no} (infoMessageD);
+    \path [line] (infoMessageD.north) |-  (askDomain.north);
+    \path [line] (askDomain) --  node{yes} (askDomainName);
+    \path [line] (askDomain) --  node{abort} (end);
+	\path [line] (askDomainName) --  node{Domain Name} (askDomainNameCorrect);
+	
+	\coordinate (left askDomainName) at ($(askDomainName.west)+(0,1cm)$);
+	\coordinate (left askDomainNameCorrect) at ($(askDomainNameCorrect.west)$);
+	\draw[line]  
+	(askDomainNameCorrect.west) -- (left askDomainNameCorrect)
+	-- node[anchor=south] {no} ++ (-0.4cm,0)
+	|- (askDomainName.west);
+	
+	\path [line] (askDomainNameCorrect.west) -|  node{abort} (end);
+	
+	\coordinate (Above getIp) at ($(getIp.north)+(0,1cm)$);
+	\coordinate (Below askDomainNameCorrect) at ($(askDomainNameCorrect.east)$);
+	\draw[line]  
+	(askDomainNameCorrect.east) -- (Below askDomainNameCorrect)
+	-- node {yes} ++ (0.5cm,0)
+	|- (Above getIp)
+	-- (getIp.north);
+	
+	\path [line] (getIp) -- (moreIp);
+	\path [line] (moreIp) --node{$>$ 1} (askIP);
+	\path [line] (askIP) --node{yes} (ipRev);
+	\path [line] (askIP) --node{no} (optionIp);
+	\path [line] (optionIp) -- (chooseIP);	
+
+	\coordinate (left askIP) at ($(askIP.west)+(0,1cm)$);
+	\coordinate (left chooseIP) at ($(chooseIP.west)$);
+	\draw[line]  
+	(chooseIP.west) -- (left chooseIP)
+	-- ++ (-0.45cm,0)
+	|- (askIP.west);
+
+
+	\path [line] (moreIp) -- node{= 1} (ipRev);
+	\path [line] (ipRev) -- (installNSD);
+	\path [line] (installNSD) -- (infoDomain2);
+	\path [line] (infoDomain2) -- (moreIPUnbound);
+	\path [line] (moreIPUnbound) --node{= 0} (end2);
+	\path [line] (moreIPUnbound) --node{$>$ 0} (usageUnbound);
+	\path [line] (usageUnbound.east) -| node[anchor=south] {localhost} (end2);
+	
+	\coordinate (right moreIp2) at ($(moreIp2.east)+(0,1cm)$);
+	\coordinate (Below usageUnbound) at ($(usageUnbound.south)$);
+	\draw[line]  
+	(usageUnbound.east) -- (Below usageUnbound)
+	-- node {local area} ++ (4.5cm,0)
+	|- (moreIp2.east);
+	
+	\path [line] (moreIp2) --node[anchor=west]{$>$ 1} (optionIp2);
+	\path [line] (optionIp2) -- (chooseIP2);
+	
+	\coordinate (left reconfUnbound) at ($(reconfUnbound.west)+(0,1cm)$);
+	\coordinate (left chooseIP2) at ($(chooseIP2.west)$);
+	\draw[line]  
+	(chooseIP2.west) -- (left chooseIP2)
+	-- ++ (-0.4cm,0)
+	|- (reconfUnbound.west);
+	
+	
+	
+	\path [line] (moreIp2) --node{= 1} (reconfUnbound);
+	\path [line] (reconfUnbound) -- (end2);
+	
+	
+\end{tikzpicture}
+
+
+\end{document}

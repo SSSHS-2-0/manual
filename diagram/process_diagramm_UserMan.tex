@@ -1,0 +1,46 @@
+\documentclass[tikz,border=4mm]{standalone}
+%\special{papersize=210mm,297mm}
+\usetikzlibrary{shapes,arrows,calc}
+\begin{document}
+	\pagestyle{empty}
+	
+	
+	% Define block styles
+	\tikzstyle{decision} = [diamond, draw, fill=blue!20,
+	text width=4.5em, text badly centered, node distance=3cm, inner sep=0pt,font=\fontsize{7}{7}\selectfont]
+	\tikzstyle{block} = [rectangle, draw, fill=blue!20,
+	text width=5em, text centered, rounded corners, minimum height=4em,font=\fontsize{7}{7}\selectfont]
+	\tikzstyle{line} = [draw, -latex',font=\fontsize{7}{7}\selectfont]
+	\tikzstyle{cloud} = [draw, ellipse,fill=red!20, node distance=3cm,
+	minimum height=2em,font=\fontsize{7}{7}\selectfont]
+	
+	\begin{tikzpicture}[node distance = 3cm, auto]
+	% Place nodes
+	\node [cloud] (start) {start};
+	\node [block, below of=start] (enterUser) {Enter username};
+	\node [decision, right of=enterUser] (existeUser) {User exists};
+	\node [block, right of=existeUser] (createUser) {Create user};
+	\node [decision, below of=existeUser] (addUser) {Enter additional user};
+	\node [decision, right of=addUser] (addSudo) {Add sudo privileges};
+	\node [block, below of=addSudo] (addSudoGroup) {Add to sudo group};
+	\node [cloud, below of=addUser] (end) {end};
+	
+	% Draw edges
+	\path [line] (start) -- (enterUser);
+	\path [line] (enterUser) -- (existeUser);
+	\path [line] (existeUser) -- node{Yes} (addUser);
+	\path [line] (addUser) -- node{No} (end);
+	\coordinate (left existeUser) at ($(existeUser.west)+(0,1cm)$);
+	\coordinate (left addUser) at ($(addUser.west)$);
+	\draw[line]
+	(addUser.west) -- (left addUser)
+	-- node[anchor=north] {Yes} ++ (-0.4cm,0)
+	|- (existeUser.west);
+	\path [line] (existeUser) -- node{No} (createUser);
+	\path [line] (createUser) -- (addSudo);
+	\path [line] (addSudo) --  node{No} (addUser);
+	\path [line] (addSudo) -- node{Yes} (addSudoGroup);
+	\path [line] (addSudoGroup) -- (addUser);
+	
+	\end{tikzpicture}
+\end{document}

@@ -1,0 +1,128 @@
+\section{User management} \label{user_management}
+ The usermanagment is used whenever a list of users on the unix system must be selected for a service.
+ In the following subsections you find a brief overview of all the available actions.
+
+ \subsection{Actions}
+ Here you find a short example for each action, inputs are highlighted.
+
+ \subsubsection{Help}
+ The help text displays at the start of the function end everytime the command help ist entered.
+ \begin{lstlisting}[escapeinside=||]    
+<INFO> - Mon Jan 14 09:44:29 UTC 2019 - Doing user handling for SSH configuration
+Usage:
+        This function helps you manage the users on this system and select the ones you wish to provision for the ssh service.
+        Following actions are available:
+                help:           Display this help
+                display:        Show all unix users on this system
+                add:            Add a unix user to this system (this implies the select action)
+                delete:         Remove a unix user from this system (this implies the unselect action)
+                select:         Add an existing unix user to the list of users which will be provisioned for the service ssh
+                unselect:       Remove a user from the list of users which will be provisioned for the service ssh
+                show:           Show the list of users which will be provisioned for the service ssh
+                quit:           Exit this function
+ \end{lstlisting}
+ 
+ \subsubsection{Display}
+ Show all unix users on the system:
+ \begin{lstlisting}[escapeinside=||]    
+<INFO> - Mon Jan 14 09:44:29 UTC 2019 - Number of users selected: 0                                                        
+*** QUESTION *** what action do you like to choose? (help/display/add/delete/select/unselect/show/quit)  |\colorbox{yellow}{display}|
+                                                                                                                                                                                                                                                                                                                                              
+<INFO> - Mon Jan 14 09:44:42 UTC 2019 - Displaying users for this system
+root
+sync
+ \end{lstlisting}
+ 
+ \subsubsection{Add}
+ Add a unix user to the system (this implies the select action)
+ \begin{lstlisting}[escapeinside=||]
+<INFO> - Mon Jan 14 09:44:42 UTC 2019 - Number of users selected: 0
+*** QUESTION *** what action do you like to choose? (help/display/add/delete/select/unselect/show/quit)  |\colorbox{yellow}{add}|
+                                                                                                                                                                                                                                                                                                                                              
+<INFO> - Mon Jan 14 09:45:07 UTC 2019 - Adding user for this system
+*** QUESTION *** please enter the desired username to be added?  |\colorbox{yellow}{alice}|
+
+id: 'alice': no such user
+Adding user 'alice' ...
+Adding new group 'alice' (1000) ...
+Adding new user 'alice' (1000) with group 'alice' ...
+Creating home directory '/home/alice' ...
+Copying files from '/etc/skel' ...
+Enter new UNIX password:
+Retype new UNIX password:
+passwd: password updated successfully
+Changing the user information for alice
+Enter the new value, or press ENTER for the default
+        Full Name []:
+        Room Number []:
+        Work Phone []:
+        Home Phone []:
+        Other []:
+Is the information correct? [Y/n] y
+<INFO> - Mon Jan 14 09:45:22 UTC 2019 - Successfully added user alice, adding it to the list for ssh
+
+*** QUESTION *** Do you want to add sudo privileges for the user alice? (y/N)  |\colorbox{yellow}{y}|
+<INFO> - Mon Jan 14 09:45:28 UTC 2019 - Adding sudo privileges for user alice
+<INFO> - Mon Jan 14 09:45:28 UTC 2019 - Successfuly added sudo privileges for user alice
+ \end{lstlisting}
+ 
+ \subsubsection{Show}
+ Show the list of users which will be provisioned for the service
+ \begin{lstlisting}[escapeinside=||]
+<INFO> - Mon Jan 14 09:45:28 UTC 2019 - Number of users selected: 1
+*** QUESTION *** what action do you like to choose? (help/display/add/delete/select/unselect/show/quit)  |\colorbox{yellow}{alice}|
+<INFO> - Mon Jan 14 09:45:46 UTC 2019 - Displaying selected users for service ssh
+<INFO> - Mon Jan 14 09:45:46 UTC 2019 - alice
+ \end{lstlisting}
+ 
+ \subsubsection{Unselect}
+ Remove a user from the list of users which will be provisioned for the service
+ \begin{lstlisting}[escapeinside=||]
+<INFO> - Mon Jan 14 09:45:46 UTC 2019 - Number of users selected: 1
+*** QUESTION *** what action do you like to choose? (help/display/add/delete/select/unselect/show/quit)  |\colorbox{yellow}{unselect}|
+<INFO> - Mon Jan 14 09:45:56 UTC 2019 - Unselecting user for service ssh
+*** QUESTION *** please enter the desired username to be removed from selection?  |\colorbox{yellow}{alice}|
+<INFO> - Mon Jan 14 09:45:59 UTC 2019 - Removed alice from selection for ssh
+ \end{lstlisting}
+ 
+ \subsubsection{Select}
+ Add an existing unix user to the list of users which will be provisioned for the service
+ \begin{lstlisting}[escapeinside=||]
+<INFO> - Mon Jan 14 09:45:59 UTC 2019 - Number of users selected: 0
+*** QUESTION *** what action do you like to choose? (help/display/add/delete/select/unselect/show/quit)  |\colorbox{yellow}{select}|
+<INFO> - Mon Jan 14 09:46:07 UTC 2019 - Selecting user for service ssh
+*** QUESTION *** please enter the desired username to be selected?  |\colorbox{yellow}{alice}|
+<INFO> - Mon Jan 14 09:46:09 UTC 2019 - Selected alice for ssh
+ \end{lstlisting}
+ 
+ \subsubsection{Delete}
+ Remove a unix user from the system (this implies the unselect action)
+ \begin{lstlisting}[escapeinside=||]
+<INFO> - Mon Jan 14 09:46:13 UTC 2019 - Number of users selected: 1
+*** QUESTION *** what action do you like to choose? (help/display/add/delete/select/unselect/show/quit)  |\colorbox{yellow}{delete}|
+<INFO> - Mon Jan 14 09:46:20 UTC 2019 - Removing user for this system
+*** QUESTION *** please enter the desired username to be deleted?  |\colorbox{yellow}{sync}|
+Removing files ...
+Removing user 'sync' ...
+Warning: group 'nogroup' has no more members.
+Done.
+<INFO> - Mon Jan 14 09:46:23 UTC 2019 - Successfully deleted user sync
+ \end{lstlisting}
+ 
+ \subsubsection{Quit}
+ Exit the function
+ \begin{lstlisting}[escapeinside=||]
+<INFO> - Mon Jan 14 09:46:46 UTC 2019 - Number of users selected: 1
+*** QUESTION *** what action do you like to choose? (help/display/add/delete/select/unselect/show/quit)  |\colorbox{yellow}{quit}|
+ \end{lstlisting}
+
+\subsection{User management process diagram}
+Here we have process diagram of how the script works with all possible outcomes.
+
+\begin{figure}[H]
+        \usetikzlibrary{shapes,arrows,calc}
+        \centering
+        \includestandalone[scale=0.9]{diagram/process_diagramm_UserMan}
+        \caption{User management process diagram}
+\end{figure}
+\newpage

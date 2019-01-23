@@ -1,0 +1,260 @@
+\section{E-Mail}
+ \subsection{Configurations}
+ This is an example of the Email configuration part, all inputs are highlighted in yellow.
+
+ \subsubsection{Package installation}
+ First all the neccessary packages are installed, this includes:
+ \begin{itemize}
+ \item{postfix}
+ \item{mailutils}
+ \item{letsencrypt}
+ \item{dovecot}
+ \item{opendkim}
+ \item{opendmarc}
+ \item{zip}
+ \end{itemize}
+ \begin{lstlisting}[escapeinside=||]    
+<Mail> - Mon Jan 14 11:29:52 UTC 2019 - Perform install on Mail                                                                                                                                                                                                                                                                               
+<INFO> - Mon Jan 14 11:29:52 UTC 2019 - Setting up MX and SPF records in dns
+                                                                                                                                                                                                                                                                                                                                              
+<INFO> - Mon Jan 14 11:29:52 UTC 2019 - Appending DNS records for the mailserver to zonefile
+                                                                                                                                                                                                                                                                                                                                              
+<INFO> - Mon Jan 14 11:29:52 UTC 2019 - Reloading zone files..
+                                                                                                                                                                                                                                                                                                                                              
+<INFO> - Mon Jan 14 11:29:52 UTC 2019 - Installing mailserver packages (postfix, mailutils, dovecot)
+<INFO> - Mon Jan 14 11:30:15 UTC 2019 - Will install 'postfix-pcre' now. Please wait...
+......
+<INFO> - Mon Jan 14 11:30:21 UTC 2019 - Package 'postfix-pcre' is installed now.     
+<INFO> - Mon Jan 14 11:30:21 UTC 2019 - Will install 'postfix-policyd-spf-python' now. Please wait...
+.......
+<INFO> - Mon Jan 14 11:30:27 UTC 2019 - Package 'postfix-policyd-spf-python' is installed now.
+<INFO> - Mon Jan 14 11:30:28 UTC 2019 - Will install 'mailutils' now. Please wait...
+........
+<INFO> - Mon Jan 14 11:30:36 UTC 2019 - Package 'mailutils' is installed now.
+<INFO> - Mon Jan 14 11:30:36 UTC 2019 - Will install 'letsencrypt' now. Please wait...
+...............
+<INFO> - Mon Jan 14 11:30:51 UTC 2019 - Package 'letsencrypt' is installed now.
+<INFO> - Mon Jan 14 11:30:51 UTC 2019 - Will install 'dovecot-core' now. Please wait...
+.....................
+<INFO> - Mon Jan 14 11:31:11 UTC 2019 - Package 'dovecot-core' is installed now.
+<INFO> - Mon Jan 14 11:31:11 UTC 2019 - Will install 'dovecot-imapd' now. Please wait...
+..............
+<INFO> - Mon Jan 14 11:31:24 UTC 2019 - Package 'dovecot-imapd' is installed now.
+<INFO> - Mon Jan 14 11:31:25 UTC 2019 - Will install 'opendkim' now. Please wait...
+........
+<INFO> - Mon Jan 14 11:31:33 UTC 2019 - Package 'opendkim' is installed now.
+<INFO> - Mon Jan 14 11:31:33 UTC 2019 - Will install 'opendkim-tools' now. Please wait...
+......
+<INFO> - Mon Jan 14 11:31:38 UTC 2019 - Package 'opendkim-tools' is installed now.
+<INFO> - Mon Jan 14 11:31:39 UTC 2019 - Will install 'opendmarc' now. Please wait...
+..........
+<INFO> - Mon Jan 14 11:31:48 UTC 2019 - Package 'opendmarc' is installed now.
+<INFO> - Mon Jan 14 11:31:48 UTC 2019 - Will install 'zip' now. Please wait...
+......
+<INFO> - Mon Jan 14 11:31:54 UTC 2019 - Package 'zip' is installed now.
+ \end{lstlisting}
+ 
+ \subsubsection{Client certificates}
+ The setup allows only logins with personal certificates, the following are generated here.
+ This is a minimal configuration for the user managment, for further information see section \ref{user_management}
+ \begin{lstlisting}[escapeinside=||]    
+<INFO> - Mon Jan 14 11:31:54 UTC 2019 - Configure Mail Hardening (TLS, SPF, DKIM, DMARC, dovecot, client certificate login)
+Usage:
+        This function helps you manage the users on this system and select the ones you wish to provision for the mail service.
+        Following actions are available:
+                help: 		Display this help
+                display: 	Show all unix users on this system
+				add: 		Add a unix user to this system (this implies the select action)
+                delete: 	Remove a unix user from this system (this implies the unselect action)
+                select: 	Add a existing unix user to the list of users which will be provisioned for the service mail
+                unselect: 	Remove a user from the list of users which will be provisioned for the service mail
+				show: 		Show the list of users which will be provisioned for the service mail
+				quit: 		Exit this function
+                                                                                                                                                                                                                                                                                                                                              
+<INFO> - Mon Jan 14 11:34:31 UTC 2019 - Number of users selected: 0
+ *** QUESTION *** what action do you like to choose? (display/add/delete/select/unselect/show/quit)  |\colorbox{yellow}{select}|
+                                                                                                                                                                                                                                                                                                                                              
+<INFO> - Mon Jan 14 11:34:33 UTC 2019 - Selecting user for service mail
+                                                                                                                                                                                                                                                                                                                                              
+ *** QUESTION *** please enter the desired username to be selected?  |\colorbox{yellow}{alice}|
+                                                                                                                                                                                                                                                                                                                                              
+<INFO> - Mon Jan 14 11:34:35 UTC 2019 - Selected alice for mail
+                                                                                                                                                                                                                                                                                                                                              
+<INFO> - Mon Jan 14 11:34:35 UTC 2019 - Number of users selected: 1
+ *** QUESTION *** what action do you like to choose? (display/add/delete/select/unselect/show/quit)  |\colorbox{yellow}{quit}| 
+<INFO> - Mon Jan 14 11:34:39 UTC 2019 - Leaving user management
+ \end{lstlisting}
+ 
+ \subsubsection{Postfix configuration}
+ In this setup postfix acts as the \gls{SMTP} Server to send an recieve mail. The script now configures all the neccessary postfix components:
+ \begin{itemize}
+ \item{User mappings (alias, canonical)}
+ \item{Service users}
+ \item{\gls{TLS} (letsencrypt)}
+ \item{Anti spam measures (\gls{SPF}, \gls{DKIM}, \gls{DMARC})}
+ \end{itemize} 
+ \begin{lstlisting}[escapeinside=||]    
+
+<INFO> - Mon Jan 14 11:34:39 UTC 2019 - Mapping users to mail addresses
+                                                                                                                                                                                                                                                                                                                                              
+<INFO> - Mon Jan 14 11:34:39 UTC 2019 - Adding users to alias and canonical file
+                                                                                                                                                                                                                                                                                                                                              
+<INFO> - Mon Jan 14 11:34:39 UTC 2019 - Adding supplementary postmaster user for dmarc reporting
+                                                                                                                                                                                                                                                                                                                                              
+<INFO> - Mon Jan 14 11:34:39 UTC 2019 - Setting up TLS with letsencrypt
+                                                                                                                                                                                                                                                                                                                                              
+<INFO> - Mon Jan 14 11:34:39 UTC 2019 - Running letsencrypt to obtain a certificate
+                                                                                                                                                                                                                                                                                                                                              
+<INFO> - Mon Jan 14 11:34:40 UTC 2019 - Will install 'certbot' now. Please wait...
+...
+<INFO> - Mon Jan 14 11:34:42 UTC 2019 - Package 'certbot' is installed now.
+Saving debug log to /var/log/letsencrypt/letsencrypt.log
+Plugins selected: Authenticator standalone, Installer None
+Obtaining a new certificate
+Performing the following challenges:
+http-01 challenge for mail.examplerun.cf
+Waiting for verification...
+Cleaning up challenges
+                                                                                                                                                                                                                                                                                                                                              
+IMPORTANT NOTES:
+ - Congratulations! Your certificate and chain have been saved at:
+   /etc/letsencrypt/live/mail.examplerun.cf/fullchain.pem
+   Your key file has been saved at:
+   /etc/letsencrypt/live/mail.examplerun.cf/privkey.pem
+   Your cert will expire on 2019-04-14. To obtain a new or tweaked
+   version of this certificate in the future, simply run certbot
+   again. To non-interactively renew *all* of your certificates, run
+   "certbot renew"
+
+ - Your account credentials have been saved in your Certbot
+   configuration directory at /etc/letsencrypt. You should make a
+   secure backup of this folder now. This configuration directory will
+   also contain certificates and private keys obtained by Certbot so
+   making regular backups of this folder is ideal.
+
+ - If you like Certbot, please consider supporting our work by:
+                                                                                                                                                                                                                                                                                                                                              
+   Donating to ISRG / Lets Encrypt:   https://letsencrypt.org/donate                                                                                                                                                                                                                                                                         
+   Donating to EFF:                    https://eff.org/donate-le 
+
+<INFO> - Mon Jan 14 11:34:50 UTC 2019 - Configuring TLS for postfix
+                                                                                                                                                                                                                                                                                                                                              
+<INFO> - Mon Jan 14 11:34:51 UTC 2019 - TLS configuration for postfix complete
+
+<INFO> - Mon Jan 14 11:34:51 UTC 2019 - Restarting postfix service
+
+<INFO> - Mon Jan 14 11:34:53 UTC 2019 - Setting up SPF (anti spam measure)
+
+<INFO> - Mon Jan 14 11:34:53 UTC 2019 - Adding SPF configuration to unbound
+
+<INFO> - Mon Jan 14 11:34:53 UTC 2019 - Adding SPF configuration to postfix config
+
+<INFO> - Mon Jan 14 11:34:53 UTC 2019 - Setting up DKIM (anti spam measure)
+
+<INFO> - Mon Jan 14 11:34:53 UTC 2019 - Creating users for DKIM
+
+<INFO> - Mon Jan 14 11:34:53 UTC 2019 - Configuring opendkim
+
+opendkim-genkey: generating private key
+opendkim-genkey: private key written to 2019011411.private
+opendkim-genkey: extracting public key
+opendkim-genkey: DNS TXT record written to 2019011411.txt
+
+<INFO> - Mon Jan 14 11:34:54 UTC 2019 - Reloading systemd units
+
+<INFO> - Mon Jan 14 11:34:55 UTC 2019 - Generating DNS records for opendkim
+
+<INFO> - Mon Jan 14 11:34:55 UTC 2019 - Setting up DMARC (anti spoofing measure)
+
+<INFO> - Mon Jan 14 11:34:55 UTC 2019 - Configurting opendmarc
+
+<INFO> - Mon Jan 14 11:34:55 UTC 2019 - Reloading systemd units
+
+<INFO> - Mon Jan 14 11:34:55 UTC 2019 - Adding DNS records for opendmarc
+
+<INFO> - Mon Jan 14 11:34:55 UTC 2019 - Integrating opendmarc into postfix
+\end{lstlisting}
+ 
+ \subsubsection{Dovecot configuration}
+ Dovecot acts as the \gls{IMAP} server to enable clients to fetch mail from the server. 
+The authentication is done via client certificates. 
+At the end the generated certificates for the user can be downloaded over a secure SSH connection. This includes:
+ \begin{itemize}
+     \item{Dovecot \gls{SSL} (letsencrypt)}
+     \item{Authentication via certificates}
+     \item{Preparation of artifacts (ZIP file with certificates) and download command}
+ \end{itemize} 
+ \begin{lstlisting}[escapeinside=||]    
+<INFO> - Mon Jan 14 11:34:55 UTC 2019 - Configuring dovecot as imap server
+
+<INFO> - Mon Jan 14 11:34:55 UTC 2019 - Configuring dovecot
+
+<INFO> - Mon Jan 14 11:34:55 UTC 2019 - Configuring dovecot service
+
+<INFO> - Mon Jan 14 11:34:55 UTC 2019 - Configuring dovecot SSL
+
+<INFO> - Mon Jan 14 11:34:55 UTC 2019 - Configuring dovecot SSL
+
+<INFO> - Mon Jan 14 11:34:55 UTC 2019 - Configuring external auth extension
+
+<INFO> - Mon Jan 14 11:34:55 UTC 2019 - Configuring postfix for client certificates
+
+<INFO> - Mon Jan 14 11:34:55 UTC 2019 - Configuring client certificate authentication
+
+<INFO> - Mon Jan 14 11:34:57 UTC 2019 - Generating certificate authority, please enter a passphrase when promted:
+
+Enter New CA Key Passphrase: |\colorbox{yellow}{******}|
+Re-Enter New CA Key Passphrase: |\colorbox{yellow}{******}|
+Generating RSA private key, 4096 bit long modulus
+........................................................................
+........................................................................
+........................................................................
+....................................++                                                                               
+..................++
+e is 65537 (0x010001)
+Enter pass phrase for /root/src/EasyRSA-3.0.5/pki/private/ca.key: |\colorbox{yellow}{******}|
+/root/src
+
+<INFO> - Mon Jan 14 11:35:07 UTC 2019 - Generating key and certificate for user alice
+<INFO> - Mon Jan 14 11:35:07 UTC 2019 - |\colorbox{yellow}{IMPORTANT - make sure you remember ALL the passphrases! You can download your certificate and key}| 
+|\colorbox{yellow}{after the setup. - IMPORTANT}|
+
+Signature ok
+subject=CN = alice, emailAddress = alice@examplerun.cf
+Getting CA Private Key
+Enter pass phrase for /etc/ssl/private/examplerun.cf.ca.key:
+
+<INFO> - Mon Jan 14 11:35:13 UTC 2019 - |\colorbox{yellow}{IMPORTANT - certificate and key for the user "alice" are saved to his home. He can download it }|
+|\colorbox{yellow}{later over a secure SSH connection - IMPORTANT}|
+
+<INFO> - Mon Jan 14 11:35:13 UTC 2019 - Cleaning up..
+<INFO> - Mon Jan 14 11:35:13 UTC 2019 - Creating zip file for alice user artifacts
+  adding: id_rsa (deflated 24%)
+  adding: id_rsa.pub (deflated 20%)
+  adding: alice.examplerun.cf.clientcert.pem (deflated 27%)
+ <INFO> - Mon Jan 14 11:35:13 UTC 2019 - This is your command to download your files to your local directory (rsync needs to be installed on your client): 
+ |\colorbox{yellow}{rsync -e \enquote{ssh -i PATH\_TO\_YOUR\_SSH\_PRIVATE\_KEY} --remove-source-files -av alice@examplerun.cf:/home/ali}|
+ |\colorbox{yellow}{ce/alice\_artifacts.zip ./}|
+ <INFO> - Mon Jan 14 11:35:13 UTC 2019 - Finishing up, restarting services
+
+<INFO> - Mon Jan 14 11:35:13 UTC 2019 - Restarting all components of the mailserver
+
+<INFO> - Mon Jan 14 11:35:17 UTC 2019 - Mailserver configuration complete.
+<Mail> - Mon Jan 14 11:35:17 UTC 2019 - Actions on Mail Done
+ \end{lstlisting}
+ \newpage
+ 
+\subsection{E-Mail process diagram}
+Here we have process diagram of how the script works with all possible outcomes.
+
+\begin{figure}[H]
+        \usetikzlibrary{shapes,arrows,calc}
+        \centering
+        \includestandalone[scale=1.4]{diagram/process_diagramm_MAIL}
+        \caption{Email process diagram}
+\end{figure}
+
+\subsection{Multiple e-mail addresses}
+With the user management you can create multiple users. All of them will get their own mail address. In this version of the script it is not possible to have multiple mail addresses per user. See subsection \ref{future_work_mail}.
+
+\newpage

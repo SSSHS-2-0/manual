@@ -1,0 +1,53 @@
+\documentclass[12pt,article]{article}
+\pagenumbering{gobble}
+\usepackage[paper=landscape]{typearea}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{mathpazo}
+\linespread{1.05}
+\usepackage{tikz}
+\usepackage{tikz-uml}
+\usepackage{amsmath}
+\usepackage{savetrees}
+\begin{document}
+
+\begin{figure}[h!]
+\begin{tikzpicture}
+\begin{umlsystem}{Script Usage}
+\umlusecase[x=-3]{UC4 Uninstall Components} %usecase-1
+\umlusecase[x=-3, y=-1.5 ]{UC3 Modify Compnents} %usecase-2
+\umlusecase[x=-3, y=-3 ]{UC2 Install Compnents} %usecase-3
+\umlusecase[x=-3, y=-4.5]{UC1 Execute Script} %usecase-4
+\umlusecase[x=-3, y=-6]{UC6 Review Script} %usecase-5
+\umlusecase[x=-3, y=-7.5]{UC7 Suggestions} %usecase-6
+\umlusecase[x=-3, y=-9]{UC8 Requests} %usecase-7
+\umlusecase[x=4, y=-1.5]{UC5 Create Summary} %usecase-8
+%\umlusecase[x=3,y=-4]{Firewall Configuration} %usecase-9
+\end{umlsystem}
+
+\umlactor[x=-10, y=-3.5]{End-User}
+\umlactor[x=-10,y=-8]{OSS Community}
+\umlactor[x=10, y=-3]{Software Repository}
+\umlactor[x=10,y=-6]{Script Repository}
+\umlnote[x=10]{Software Repository}{External Systems}
+\umlnote[x=10]{Script Repository}{External Systems}
+
+\umlassoc{End-User}{usecase-1}
+\umlassoc{End-User}{usecase-2}
+\umlassoc{End-User}{usecase-3}
+\umlassoc{End-User}{usecase-4}
+\umlassoc{OSS Community}{usecase-5}
+\umlassoc{OSS Community}{usecase-6}
+\umlassoc{OSS Community}{usecase-7}
+\umlassoc{Software Repository}{usecase-3}
+\umlassoc{Script Repository}{usecase-4}
+\umlinherit{OSS Community}{End-User}
+
+\umlextend{usecase-8}{usecase-1}
+\umlextend{usecase-8}{usecase-2}
+\umlextend{usecase-8}{usecase-3}
+\umlinclude{usecase-3}{usecase-4}
+\end{tikzpicture}
+\end{figure}
+
+\end{document}

@@ -1,0 +1,184 @@
+\documentclass[tikz,border=4mm]{standalone}
+%\special{papersize=210mm,297mm}
+\usetikzlibrary{shapes,arrows,calc}
+\begin{document}
+\pagestyle{empty}
+
+
+% Define block styles
+\tikzstyle{decision} = [diamond, draw, fill=blue!20, 
+    text width=4.5em, text badly centered, node distance=3cm, inner sep=0pt,font=\fontsize{7}{7}\selectfont]
+\tikzstyle{block} = [rectangle, draw, fill=blue!20, 
+    text width=5em, text centered, rounded corners, minimum height=4em,font=\fontsize{7}{7}\selectfont]
+\tikzstyle{line} = [draw, -latex',font=\fontsize{7}{7}\selectfont]
+\tikzstyle{cloud} = [draw, ellipse,fill=red!20, node distance=3cm,
+    minimum height=2em,font=\fontsize{7}{7}\selectfont]
+    
+\begin{tikzpicture}[node distance = 4cm, auto]
+    % Place nodes
+    \node [cloud] (start) {start};
+    \node [block, right of=start, node distance=3cm] (initFlags) {Initialize all Flags (Firewall, DNS, Mail, SSH, WEB, Uninstall) };
+    \node [decision, right of=initFlags, node distance=3cm] (firstRun) {Check if first run};
+    \node [decision, right of=firstRun, node distance=3cm] (UninstallMod) {Uninstall or Modify?};
+    \node [block, below of=UninstallMod, node distance=3cm] (Uninstall) {Set Uninstall Flag to 1};
+    
+    
+    \node [decision, below of=firstRun, node distance=6cm] (fullSetup) {Choose if you want a full setup};
+    \node [block, right of=fullSetup, node distance=3cm] (startAll) {Set all Flags to 1};
+    
+    \node [decision, left of=fullSetup, node distance=3cm] (setupFW) {Setup Firewall?};
+    
+    \node [decision, below of=setupFW, node distance=3cm] (setupDNS) {Setup DNS?};
+    \node [block, left of=setupDNS, node distance=3cm] (FW1) {Set FW Falg to 1};
+    \node [block, right of=setupDNS, node distance=3cm] (FW0) {Set FW Falg to 0};
+    
+    \node [decision, below of=setupDNS, node distance=3cm] (setupSSH) {Setup SSH?};
+    \node [block, left of=setupSSH, node distance=3cm] (DNS1) {Set DNS Falg to 1};
+    \node [block, right of=setupSSH, node distance=3cm] (DNS0) {Set DNS Falg to 0};
+    
+    \node [decision, below of=setupSSH, node distance=3cm] (setupMail) {Setup Mail?};
+    \node [block, left of=setupMail, node distance=3cm] (SSH1) {Set SSH Falg to 1};
+    \node [block, right of=setupMail, node distance=3cm] (SSH0) {Set SSH Falg to 0};
+    
+    \node [decision, below of=setupMail, node distance=3cm] (setupWeb) {Setup Web?};
+    \node [block, left of=setupWeb, node distance=3cm] (Mail1) {Set Mail Falg to 1};
+    \node [block, right of=setupWeb, node distance=3cm] (Mail0) {Set Mail Falg to 0};
+    
+    \node [block, below of=Mail1, node distance=3cm] (Web1) {Set Web Falg to 1};
+    \node [block, below of=Mail0, node distance=3cm] (Web0) {Set Web Falg to 0};
+    \node [block, below of=Web0, node distance=3cm] (DoneFlags) {Done Set Flags};
+    
+    \node [decision, right of=UninstallMod, node distance=3cm] (FlagCheckFW) {Firewall Flag = 1?};
+    \node [decision, right of=FlagCheckFW, node distance=3cm] (CheckFWUninstall) {Uninstall Flag = 1?};
+    \node [block, right of=CheckFWUninstall, node distance=3cm] (UninstallFirewall) {Start Uninstall Firewall};
+    \node [block, below of=UninstallFirewall, node distance=3cm] (Firewall) {Start Firewall Configurations};
+    
+    \node [block, below of=Firewall, node distance=3cm] (UninstallDNS) {Start Uninstall DNS};
+    \node [block, below of=UninstallDNS, node distance=3cm] (DNS) {Start DNS Configurations};
+    \node [decision, left of=UninstallDNS, node distance=3cm] (CheckDNSUninstall) {Uninstall Flag = 1?};
+    \node [decision, left of=CheckDNSUninstall, node distance=3cm] (FlagCheckDNS) {DNS Flag = 1?};
+    
+    \node [block, below of=DNS, node distance=3cm] (UninstallSSH) {Skip};
+    \node [block, below of=UninstallSSH, node distance=3cm] (SSH) {Start SSH Configurations};
+    \node [decision, left of=UninstallSSH, node distance=3cm] (CheckSSHUninstall) {Uninstall Flag = 1?};
+    \node [decision, left of=CheckSSHUninstall, node distance=3cm] (FlagCheckSSH) {SSH Flag = 1?};
+    
+    
+    \node [block, below of=SSH, node distance=3cm] (UninstallMail) {Start Uninstall Mail};
+    \node [decision, left of=UninstallMail, node distance=3cm] (CheckMailUninstall) {Uninstall Flag = 1?};
+    \node [decision, left of=CheckMailUninstall, node distance=3cm] (FlagCheckMail) {Mail Flag = 1?};
+    \node [decision, below of=CheckMailUninstall, node distance=3cm] (DependsDNSMail) {DNS Flag = 1?};
+    \node [block, below of=UninstallMail, node distance=3cm] (Mail) {Start Mail Configurations};
+    \node [block, below of=Mail, node distance=3cm] (DNSMail) {Start DNS Configurations};
+    
+    
+    \node [decision, below of=FlagCheckMail, node distance=9cm] (FlagCheckWeb) {Web Flag = 1?};
+    \node [decision, right of=FlagCheckWeb, node distance=3cm] (CheckWebUninstall) {Uninstall Flag = 1?};
+    \node [block, right of=CheckWebUninstall, node distance=3cm] (UninstallWeb) {Start Uninstall Web};
+    \node [block, below of=UninstallWeb, node distance=3cm] (Web) {Start Web Configurations};
+    \node [block, below of=Web, node distance=3cm] (DNSWeb) {Start DNS Configurations};
+    \node [decision, below of=CheckWebUninstall, node distance=3cm] (DependsDNSWeb) {DNS Flag = 1?};
+    
+    
+    \node [block, right of=UninstallWeb, node distance=3cm] (MODFLAG) {Set first run done Flag};
+    \node [cloud, right of=Web] (end) {End};
+    
+    
+    % Draw edges
+    \path [line] (start) -- (initFlags);
+    \path [line] (initFlags) -- (firstRun);
+    \path [line] (firstRun) -- node {no} (UninstallMod);
+    \path [line] (firstRun) -- node {yes} (fullSetup);
+    
+    \path [line] (UninstallMod) -- node {no} (fullSetup);
+    \path [line] (UninstallMod) -- node {yes} (Uninstall);
+    \path [line] (Uninstall) -- (fullSetup);
+    
+    
+    \path [line] (fullSetup) -- node {no} (setupFW);
+    \path [line] (setupFW) -- node {yes} (FW1);
+    \path [line] (setupFW) -- node {no} (FW0);
+    \path [line] (FW1) -- (setupDNS);
+    \path [line] (FW0) -- (setupDNS);
+    
+    \path [line] (setupDNS) -- node {yes} (DNS1);
+    \path [line] (setupDNS) -- node {no} (DNS0);
+    \path [line] (DNS1) -- (setupSSH);
+    \path [line] (DNS0) -- (setupSSH);
+    
+    \path [line] (setupSSH) -- node {yes} (SSH1);
+    \path [line] (setupSSH) -- node {no} (SSH0);
+    \path [line] (SSH1) -- (setupMail);
+    \path [line] (SSH0) -- (setupMail);
+    
+    \path [line] (setupMail) -- node {yes} (Mail1);
+    \path [line] (setupMail) -- node {no} (Mail0);
+    \path [line] (Mail1) -- (setupWeb);
+    \path [line] (Mail0) -- (setupWeb);
+    
+    \path [line] (setupWeb) -- node {yes} (Web1);
+    \path [line] (setupWeb) -- node {no} (Web0);
+    
+    \path [line] (Web1) -- (DoneFlags);
+    \path [line] (Web0) -- (DoneFlags);
+    \path [line] (startAll) |- (DoneFlags);
+    
+   	\coordinate (left FlagCheckFW) at ($(FlagCheckFW.west)-(0,1cm)$);
+    \coordinate (bottom DoneFlags) at ($(DoneFlags.south)-(0,1cm)$);
+    \draw[line] (DoneFlags.south) -- (bottom DoneFlags) -| (left FlagCheckFW) -- (FlagCheckFW.west);
+        
+    
+    \path [line] (FlagCheckFW) -- node {yes} (CheckFWUninstall);
+    \path [line] (CheckFWUninstall) -- node {yes} (UninstallFirewall);
+    \path [line] (CheckDNSUninstall) -- node {yes} (UninstallDNS);
+    \path [line] (CheckSSHUninstall) -- node {yes} (UninstallSSH);
+    \path [line] (CheckMailUninstall) -- node {yes} (UninstallMail);
+    \path [line] (CheckWebUninstall) -- node {yes} (UninstallWeb);
+    \path [line] (FlagCheckDNS) -- node {yes} (CheckDNSUninstall);
+    \path [line] (FlagCheckDNS) -- node {yes} (CheckDNSUninstall);
+    \path [line] (FlagCheckSSH) -- node {yes} (CheckSSHUninstall);
+    \path [line] (FlagCheckMail) -- node {yes} (CheckMailUninstall);
+    \path [line] (FlagCheckWeb) -- node {yes} (CheckWebUninstall);
+    \path [line] (DependsDNSMail) -- node {yes} (Mail);
+    \path [line] (DependsDNSWeb) -- node {yes} (Web);
+
+    
+    \path [line] (CheckFWUninstall) |- node {no} (Firewall);
+    \path [line] (CheckDNSUninstall) |- node {no} (DNS);
+    \path [line] (CheckSSHUninstall) |- node {no} (SSH);
+    \path [line] (CheckMailUninstall) -- node {no} (DependsDNSMail);
+    \path [line] (CheckWebUninstall) -- node {no} (DependsDNSWeb);
+    
+    \path [line] (FlagCheckDNS) -- node {no} (FlagCheckSSH);
+    \path [line] (FlagCheckSSH) -- node {no} (FlagCheckMail);
+    \path [line] (FlagCheckMail) -- node {no} (FlagCheckWeb);
+    \path [line] (DependsDNSMail) -- node {no} (DNSMail);
+    \path [line] (DependsDNSWeb) -- node {no} (DNSWeb);
+    
+    \path [line] (DNSMail) -- (Mail);
+	\path [line] (DNSWeb) -- (Web);
+    
+    \path [line] (Firewall) -- (FlagCheckDNS);
+    \path [line] (UninstallFirewall) -- (FlagCheckDNS);
+    \path [line] (UninstallDNS) -- (FlagCheckSSH);
+    \path [line] (UninstallSSH) -- (FlagCheckMail);
+    \path [line] (UninstallMail) -- (FlagCheckWeb);
+    
+    \path [line] (DNS) -- (FlagCheckSSH);
+    \path [line] (SSH) -- (FlagCheckMail);
+    \path [line] (Mail) -- (FlagCheckWeb);
+    \path [line] (Web) -- (MODFLAG);
+    \path [line] (UninstallWeb) -- (MODFLAG);
+    \path [line] (MODFLAG) -- (end);
+    
+    
+    \path [line] (fullSetup) -- node {no} (setupFW);
+    \path [line] (fullSetup) -- node {yes} (startAll);
+
+    \coordinate (Above start) at ($(start.north)+(0,1cm)$);
+
+
+\end{tikzpicture}
+
+
+\end{document}

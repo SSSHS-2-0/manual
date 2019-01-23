@@ -1,0 +1,30 @@
+\documentclass[tikz,border=4mm]{standalone}
+\usetikzlibrary{shapes.geometric,positioning,fit,calc}
+\tikzstyle{line}=[draw]
+\begin{document}
+\begin{tikzpicture}[
+block/.style={
+draw,
+rectangle,
+outer sep=1cm,
+align=center,
+font=\small}]
+    \node[block] (c) {\textbf{Client}};
+    \node[block, right=3cm of c] (b) {\textbf{Base System}};
+    \node[block, right=of b.north east] (d) {\textbf{DNS}};
+    \node[block] (w) [below right=2mm and 1cm of b] {\textbf{Webserver}};
+    \node[block, above=2cm of d] (u) {\textbf{Upstream DNS}};
+    \node[block, below=2cm of w] (l) {\textbf{Let's Encrypt}};
+    \node[block, below=4cm of b] (r) {\textbf{Ubuntu Mirror}};
+    \node[block, right=of b] (m) {\textbf{Mailserver}};
+    \node[draw,inner xsep=1cm,inner ysep=1cm,fit=(b)(d)(w),label={50:Ubuntu server}](s){};
+    \node[draw,dashed,inner xsep=0.5mm,inner ysep=0.5mm,fit=(b)(d)(m),label={120:In-Scope}](i){};
+    \path[line] ([xshift=-1cm]c.east) -- ([xshift=1cm]b.west);
+    \path[line] ([yshift=-1cm]b.north) |- ([xshift=1cm]d.west);
+    \path[line] ([yshift=1cm,xshift=5mm]b.south) |- ([xshift=1cm]w.west);
+    \path[line] ([yshift=-1cm]d.north) -- ([yshift=1cm]u.south);
+    \path[line] ([yshift=1cm]w.south) -- ([yshift=-1cm]l.north);
+    \path[line] ([yshift=1cm,xshift=-5mm]b.south) |- ([yshift=-1cm]r.north);
+    \path[line] ([xshift=-1cm]b.east) -- ([xshift=1cm]m.west);
+\end{tikzpicture}
+\end{document}

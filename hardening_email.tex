@@ -1,0 +1,58 @@
+
+\section{E-Mail}
+To run a E-Mail server is not easy at all. Even professional providers which should setup your email server for you do mostly mistakes. A insecure email server is also very attractive for hackers. 
+\subsection{E-Mail server configuration} 
+\subsubsection{BEFORE script}
+If you use a basic email configuration, your email server will mostly look like this (graded from: \textbf{\textit{https://www.hardenize.com}}, \textbf{\textit{https://emailsecuritygrader.com}})
+\begin{figure}[H]
+	\centering
+	\subfigure[Rank]{\includegraphics[width=0.60\textwidth]{pics/email_before_test}}
+	\subfigure[Details]{\includegraphics[width=0.39\textwidth]{pics/email_before_test2}}
+	\caption{Mail \textbf{BEFORE} (emailsecuritygrader.com)}
+	\label{fig:emailbeforetest}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.3\linewidth]{pics/hardenize_before}
+	\caption{Mail \textbf{BEFORE} (hardenize.com)}
+	\label{fig:hardenizebefore}
+\end{figure}
+
+\newpage
+\subsubsection{AFTER script}
+But if you configure your email server with the script, it will look like this:
+
+\begin{figure}[H]
+	\centering
+	\subfigure[Rank]{\includegraphics[width=0.60\textwidth]{pics/email_after_test}}
+	\subfigure[Details]{\includegraphics[width=0.39\textwidth]{pics/email_after_test2}}
+	\caption{Mail \textbf{AFTER} (emailsecuritygrader.com)}
+	\label{fig:emailaftertest}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.3\linewidth]{pics/hardenize_after}
+	\caption{Mail \textbf{AFTER} (hardenize.com)}
+	\label{fig:hardenizeafter}
+\end{figure}
+\newpage
+\subsection{E-Mail header} 
+As well if you don't want to end as SPAM your email header should be perfect, if you use the basic configuration, it won't be.
+\subsubsection{BEFORE script}
+Here how your header looks like before the script:
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{pics/mailheader_before}
+	\caption{Mail header \textbf{BEFORE}}
+	\label{fig:mailheaderbefore}
+\end{figure}
+
+\subsubsection{AFTER script}
+And here after:
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{pics/mailheader_after}
+	\caption{Mail header \textbf{AFTER}}
+	\label{fig:mailheaderbefore}
+\end{figure}
+\newpage
