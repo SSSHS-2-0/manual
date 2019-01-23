@@ -86,7 +86,7 @@ Usage:
  \end{lstlisting}
  
  \subsubsection{Postfix configuration}
- In this setup postfix acts as the \gls{SMTP} Server to send an recieve mail. The script now configures all the neccessary postfix components:
+ In this setup postfix acts as the \gls{SMTP} Server to send an recieve mail. The script now configures all the neccessary postfix components \cite{spf-dkim-postfix}:
  \begin{itemize}
  \item{User mappings (alias, canonical)}
  \item{Service users}
@@ -177,7 +177,7 @@ opendkim-genkey: DNS TXT record written to 2019011411.txt
  
  \subsubsection{Dovecot configuration}
  Dovecot acts as the \gls{IMAP} server to enable clients to fetch mail from the server. 
-The authentication is done via client certificates. 
+The authentication is done via client certificates \cite{mail-auth}. 
 At the end the generated certificates for the user can be downloaded over a secure SSH connection. This includes:
  \begin{itemize}
      \item{Dovecot \gls{SSL} (letsencrypt)}
